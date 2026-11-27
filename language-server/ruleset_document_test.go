@@ -22,7 +22,8 @@ func TestRunDiagnostic_RulesetDocuments(t *testing.T) {
 		{"unsupported module", "extends: [rules.mjs]\n", "ruleset-error", false},
 		{"Arazzo", "extends: [spectral:arazzo]\n", "", true},
 		{"unsupported API with rules", "openapi: 9.0.0\nrules: {}\n", "build-index", false},
-		{"nested rules", "config:\n  rules: {}\n", "document-error", false},
+		// local patch: YAML that is neither an API document nor a ruleset is not flagged
+		{"nested rules", "config:\n  rules: {}\n", "", true},
 		{"malformed rules", "rules: [\n", "document-error", false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

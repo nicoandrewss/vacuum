@@ -366,6 +366,10 @@ func (s *ServerState) runDiagnostic(doc *Document, notify lsp.NotifyFunc) {
 		if !runtimeConfig.skipCheck && onlyUnsupportedDocumentErrors(result.Errors) {
 			if rulesetDiagnostics, ok := diagnosticsForRuleset(content); ok {
 				diagnostics = rulesetDiagnostics
+			} else {
+				// Not an OpenAPI/Swagger/AsyncAPI/Arazzo document or a ruleset (e.g. a tool config
+				// that happens to be YAML): nothing to lint, so don't flag the whole file.
+				diagnostics = []protocol.Diagnostic{}
 			}
 		}
 		notify(protocol.ServerTextDocumentPublishDiagnostics, protocol.PublishDiagnosticsParams{URI: uri, Diagnostics: diagnostics})
